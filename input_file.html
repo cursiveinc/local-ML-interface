@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JSON Extraction and API Request</title>
+</head>
+<body>
+    <p>Enter moodle data:</p>
+
+    <textarea id="moodle_data" placeholder="Moodle data" rows="20" cols="100"></textarea>
+
+    <p>Upload JSON file:</p>
+    <input type="file" id="jsonFile" accept=".json">
+    <br>
+    <p><span style="background-color: #aaffaa">Green</span> - Added <br>
+    <span style="background-color: #ffd700;">Yellow</span> - Removed <br>
+    <s>Strikethrough</s> - Backspace used</p>
+    <br>
+    <button onclick="processData()">Highlight Updates</button>
+
+    <button onclick="highlightDiff()">Highlight all difference</button>
+
+    <button onclick="strikeDeleted()">Strike Deleted Text</button>
+
+    <div id="result">
+        <!-- The API response will be displayed here -->
+    </div>
+
+    <script>
+        function processData() {
+            const moodle_data = document.getElementById('moodle_data').value;
+            const jsonFile = document.getElementById('jsonFile').files[0];
+
+            if (!jsonFile) {
+                alert("Please upload a JSON file.");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const jsonData = event.target.result;
+                const formData = new FormData();
+                formData.append('moodle_data', moodle_data);
+                formData.append('jsonData', jsonData);
+
+                // Send the data to the API (replace with your API endpoint)
+                fetch('http://54.146.169.4:5500/generate_diff', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(htmlResponse => {
+                    // Display the API response as HTML
+                    document.getElementById('result').innerHTML = htmlResponse;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            };
+
+            reader.readAsText(jsonFile);
+        }
+
+        function highlightDiff() {
+            const moodle_data = document.getElementById('moodle_data').value;
+            const jsonFile = document.getElementById('jsonFile').files[0];
+
+            if (!jsonFile) {
+                alert("Please upload a JSON file.");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const jsonData = event.target.result;
+                const formData = new FormData();
+                formData.append('moodle_data', moodle_data);
+                formData.append('jsonData', jsonData);
+
+                // Send the data to the API (replace with your API endpoint)
+                fetch('http://54.146.169.4:5500/highlight_diff', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(htmlResponse => {
+                    // Display the API response as HTML
+                    document.getElementById('result').innerHTML = htmlResponse;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            };
+
+            reader.readAsText(jsonFile);
+        }
+
+        function strikeDeleted() {
+            const moodle_data = document.getElementById('moodle_data').value;
+            const jsonFile = document.getElementById('jsonFile').files[0];
+
+            if (!jsonFile) {
+                alert("Please upload a JSON file.");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const jsonData = event.target.result;
+                const formData = new FormData();
+                formData.append('moodle_data', moodle_data);
+                formData.append('jsonData', jsonData);
+
+                // Send the data to the API (replace with your API endpoint)
+                fetch('http://54.146.169.4:5500/strike_deleted', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(htmlResponse => {
+                    // Display the API response as HTML
+                    document.getElementById('result').innerHTML = htmlResponse;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            };
+
+            reader.readAsText(jsonFile);
+        }
+    </script>
+</body>
+</html>
