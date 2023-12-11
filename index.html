@@ -1,3 +1,11 @@
+
+<!-- Recent changes:
+     - Hardcoded the values of resource_id and person_id to "1"
+     - Made resource_id and person_id fields hidden
+     - Modified the script to always use the hardcoded values
+-->
+
+<!-- Site Info -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -40,8 +48,8 @@
   <h4 class="w3-bar-item"><b>Menu</b></h4>
   <a class="w3-bar-item w3-button w3-hover-black" href="./index.html">Analytics</a>
   <a class="w3-bar-item w3-button w3-hover-black" href="./auth.html">Authorship</a>
-  <h4 class="w3-bar-item"><i>Coming soon</i></h4>
   <a class="w3-bar-item w3-button w3-hover-black" href="./diff.html">Diff Engine</a>
+  <h4 class="w3-bar-item"><i>Coming soon</i></h4>
   <a class="w3-bar-item w3-button" href="#">Stylometrics</a>
 </nav>
 
@@ -54,18 +62,26 @@
   <div class="w3-row w3-padding-64">
     <div class="w3-twothird w3-container">
       <h1 class="w3-text-teal">Run Analytics</h1>
-      <p>The Analytics function will return an array of information and calculations based on the JSON file, they include: time writing (less pauses of over 30 seconds), total backspace % (a proxy for editing), total characters, total key presses, and more being added. If you're interested in additional data from the keyload data, please let us know. </p>
+      <p>The Analytics function will return an array of information and calculations based on the JSON file, they include: </p>
+        <ul>
+          <li>time writing (less pauses of over 30 seconds), </li>
+          <li>total backspace % (a proxy for editing), </li>
+          <li>total characters, </li><li>total key presses,</li></ul>
+      <p>and more being added. </p>
+      <p>If you're interested in additional data from the keyload data, please let us know. </p>
     </div>
+    
+    <!-- Upload area -->
     <div class="w3-third w3-container">
-      <form id="analyticsForm">
+      <br><br><br><form id="analyticsForm">
         <label for="jsonFile">JSON File:</label>
         <input type="file" id="jsonFile" name="jsonFile" accept=".json" required><br><br>
 
-        <label for="resource_id">Resource ID:</label>
-        <input type="number" id="1" name="resource_id" required><br><br>
+        <label for="resource_id"><!--Resource ID:--></label>
+        <input type="hidden" id="resource_id" name="resource_id" value="1"><br><br>
 
-        <label for="person_id">Person ID:</label>
-        <input type="number" id="person_id" name="person_id" required><br><br>
+        <label for="person_id"><!--Person ID:--></label>
+        <input type="hidden" id="person_id" name="person_id" value="1"><br><br>
 
         <input type="submit" value="Submit">
     </form>
@@ -87,8 +103,8 @@
 
             const payload = {
                 jsonFile: await formData.get('jsonFile').text(),
-                resource_id: parseInt(formData.get('resource_id')),
-                person_id: parseInt(formData.get('person_id'))
+                resource_id: 1,
+                person_id: 1
             };
 
             try {

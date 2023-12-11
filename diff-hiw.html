@@ -1,9 +1,3 @@
-
-<!-- Recent Updates:
-     - Hardcoded the values of resource_id and person_id to "1"
-     - Made resource_id and person_id fields hidden
-     - Modified the script to always use the hardcoded values
--->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -46,8 +40,8 @@
   <h4 class="w3-bar-item"><b>Menu</b></h4>
   <a class="w3-bar-item w3-button w3-hover-black" href="./index.html">Analytics</a>
   <a class="w3-bar-item w3-button w3-hover-black" href="./auth.html">Authorship</a>
-  <a class="w3-bar-item w3-button w3-hover-black" href="./diff.html">Diff Engine</a>
   <h4 class="w3-bar-item"><i>Coming soon</i></h4>
+  <a class="w3-bar-item w3-button w3-hover-black" href="./diff.html">Diff Engine</a>
   <a class="w3-bar-item w3-button" href="#">Stylometrics</a>
 </nav>
 
@@ -58,76 +52,72 @@
 <div class="w3-main" style="margin-left:250px">
 
   <div class="w3-row w3-padding-64">
-    <div class="w3-twothird w3-container">
-      <h1 class="w3-text-teal">Run Authorship</h1>
-      <p>The Authorship function is our first model comparing a student's writing output to additional sessions created with the same user account. In addition to Similarity (which is expressed as a number between 0-1) a "Copy Behavior" estimate will be presented (also 0-1). These numbers are offered as approximations and confidence scores but do not necessarily reflect infallible data about the JSON files. This model was trained on volunteered data collected on campus at the University of Maryland - College Park and the web via our friends, family, and colleagues. If you're interested in additional data from the keyload data, please let us know. </p>
+    <div class="w3-container">
+      <h1 class="w3-text-teal">Diff Engine</h1>
+      <p>In the below example, Text 1 is the submitted text. Text 2 is the text reconstructed from the JSON files providing proof of effort for the writing included in the student's submission. In this circumstance, minor issues corrected by Grammarly and the writer are highlighted in the source documentation.</p>
+      <p>Here are additional examples of the Diff function (in development)</p>
+      <ul><li><a href="./diff/text_diff_26_78_85.html" target="_blank">Example 1</a>: includes pasted text at the beginning of the text.</li>
+      <li><a href="./diff/text_diff_26_80_85.html" target="_blank">Example 2</a>: includes pasted text within the entry</li>
+      <li><a href="./diff/text_diff_26_83_85.html" target="_blank">Example 3</a>: comprised of significant editing, including large deletions and rewriting.</li></ul>
+     <style>
+            .container {
+                display: flex;
+                justify-content: space-between;
+                padding: 20px;
+            }
+            .text-column {
+                flex: 1;
+                padding: 10px;
+                border: 1px solid #ccc;
+                width: 40%;
+            }
+            .textBlock {
+                overflow: auto;
+            }
+            .added {
+                background-color: #aaffaa;
+            }
+            .deleted {
+                background-color: #ffaaaa;
+            }
+            .changed {
+                background-color: #ffffaa;
+            }
+        </style>
+    </head>
+    <body>
+        <h2>Text Differences</h2>
+        <div class="container">
+            <div class="text-column">
+                <h3>Text 1</h3>
+                <pre class="textBlock">
+    We need to make a better text editing experience for Moodle. Something that is similar to Google docs but creates a more limited set of options and a better autosave notification for students. <span class="deleted"> </span>
+    It would be <span class="deleted">aewsome </span><span class="added"></span>if we could: 
+    cut down on the buttons automatically visible if cursive is invoked 
+    show session length to make sure the student doesn't get booted 
+    show autosave status (similar to Google docs) 
+    provide wordcount and character count 
+    <span class="deleted">showcut </span><span class="added"></span>margins to a more friendly paginated view <span class="deleted">
+    </span><span class="deleted"> </span>
+    I think that would go a long way to make it <span class="added"></span><span class="deleted">"processorword"-like" </span><span class="added"></span>and give students less anxiety about using Moodle. This could be separate from and in addition to the current <span class="deleted">tinyMCEextension </span><span class="added"></span><span class="added"></span>for <span class="deleted">copypaste. </span><span class="added"></span><span class="deleted"> </span><span class="added"></span>
+                </pre>
+            </div>
+            <div class="text-column">
+                <h3>Text 2</h3>
+                <pre class="textBlock">
+    We need to make a better text editing experience for Moodle. Something that is similar to Google docs but creates a more limited set of options and a better autosave notification for students. <span class="deleted"></span>
+    It would be <span class="deleted"></span><span class="added">awesome </span>if we could: 
+    cut down on the buttons automatically visible if cursive is invoked 
+    show session length to make sure the student doesn't get booted 
+    show autosave status (similar to Google docs) 
+    provide wordcount and character count 
+    <span class="deleted"></span><span class="added">cut </span>margins to a more friendly paginated view <span class="deleted"></span><span class="deleted"></span>
+    I think that would go a long way to make it <span class="added">"word </span><span class="deleted"></span><span class="added">processor-like" </span>and give students less anxiety about using Moodle. This could be separate from and in addition to the current <span class="deleted"></span><span class="added">tinyMCE </span><span class="added">extension </span>for <span class="deleted"></span><span class="added">copypaste </span><span class="deleted"></span><span class="added">stuff. </span>
+                </pre>
+            </div>
+        </div>
     </div>
     <div class="w3-third w3-container">
-      <br><br><br><form id="scoreForm">
-        <label for="jsonFile1">JSON File 1:</label>
-        <input type="file" id="jsonFile1" name="jsonFile1" accept=".json" required><br><br>
-
-        <label for="jsonFile2">JSON File 2:</label>
-        <input type="file" id="jsonFile2" name="jsonFile2" accept=".json" required><br><br>
-
-        <label for="resource_id"><!--Resource ID:--></label>
-        <input type="hidden" id="resource_id" name="resource_id" value="1"><br><br>
-
-        <label for="person_id"><!--Person ID:--></label>
-        <input type="hidden" id="person_id" name="person_id" value="1"><br><br>
-
-        <input type="submit" value="Submit">
-    </form>
-
-    <div id="result" style="display: none;">
-        <h2>Score Details:</h2>
-        <pre id="responseJson"></pre>
-    </div>
-
-    <script>
-        const form = document.getElementById('scoreForm');
-        const resultDiv = document.getElementById('result');
-        const responseJsonElement = document.getElementById('responseJson');
-
-        form.addEventListener('submit', async (event) => {
-            event.preventDefault();
-
-            const formData = new FormData(form);
-
-            const payload = {
-                jsonFile1: await formData.get('jsonFile1').text(),
-                jsonFile2: await formData.get('jsonFile2').text(),
-                resource_id: 1,
-                person_id: 1
-            };
-
-            try {
-                const response = await fetch('http://54.146.169.4:5000/run_model', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
-                });
-
-                if (response.ok) {
-                    const responseData = await response.json();
-                    responseJsonElement.textContent = JSON.stringify(responseData, null, 2);
-                    resultDiv.style.display = 'block';
-                } else {
-                    alert('Score function failed.');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('An error occurred while making the Score funtion call.');
-            }
-        });
-
-        document.getElementById('scoreForm').addEventListener('submit', () => {
-            document.getElementById('result').style.display = 'none';
-        });
-
-    </script>
     </div>
   </div>
 
@@ -178,7 +168,7 @@
   </footer>
 
 <!-- END MAIN -->
-</div>
+
 
 <script>
 // Get the Sidebar

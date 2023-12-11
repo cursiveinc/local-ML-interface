@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <title>W3.CSS Template</title>
@@ -40,8 +40,8 @@
   <h4 class="w3-bar-item"><b>Menu</b></h4>
   <a class="w3-bar-item w3-button w3-hover-black" href="./index.html">Analytics</a>
   <a class="w3-bar-item w3-button w3-hover-black" href="./auth.html">Authorship</a>
-  <h4 class="w3-bar-item"><i>Coming soon</i></h4>
   <a class="w3-bar-item w3-button w3-hover-black" href="./diff.html">Diff Engine</a>
+  <h4 class="w3-bar-item"><i>Coming soon</i></h4>
   <a class="w3-bar-item w3-button" href="#">Stylometrics</a>
 </nav>
 
@@ -54,12 +54,8 @@
   <div class="w3-row w3-padding-64">
     <div class="w3-container">
       <h1 class="w3-text-teal">Diff Engine</h1>
-      <p>In the below example, Text 1 is the submitted text. Text 2 is the text reconstructed from the JSON files providing proof of effort for the writing included in the student's submission. In this circumstance, minor issues corrected by Grammarly and the writer are highlighted in the source documentation.</p>
-      <p>Here are additional examples of the Diff function (in development)</p>
-      <ul><li><a href="./diff/text_diff_26_78_85.html" target="_blank">Example 1</a>: includes pasted text at the beginning of the text.</li>
-      <li><a href="./diff/text_diff_26_80_85.html" target="_blank">Example 2</a>: includes pasted text within the entry</li>
-      <li><a href="./diff/text_diff_26_83_85.html" target="_blank">Example 3</a>: comprised of significant editing, including large deletions and rewriting.</li></ul>
-     <style>
+      <p>For more information on how this is intended to work, you may find that <a href="./diff-hiw.html">Diff HIW examples</a> helpful.</p>
+        <style>
             .container {
                 display: flex;
                 justify-content: space-between;
@@ -86,89 +82,102 @@
         </style>
     </head>
     <body>
-        <h2>Text Differences</h2>
-        <div class="container">
-            <div class="text-column">
-                <h3>Text 1</h3>
-                <pre class="textBlock">
-    We need to make a better text editing experience for Moodle. Something that is similar to Google docs but creates a more limited set of options and a better autosave notification for students. <span class="deleted"> </span>
-    It would be <span class="deleted">aewsome </span><span class="added"></span>if we could: 
-    cut down on the buttons automatically visible if cursive is invoked 
-    show session length to make sure the student doesn't get booted 
-    show autosave status (similar to Google docs) 
-    provide wordcount and character count 
-    <span class="deleted">showcut </span><span class="added"></span>margins to a more friendly paginated view <span class="deleted">
-    </span><span class="deleted"> </span>
-    I think that would go a long way to make it <span class="added"></span><span class="deleted">"processorword"-like" </span><span class="added"></span>and give students less anxiety about using Moodle. This could be separate from and in addition to the current <span class="deleted">tinyMCEextension </span><span class="added"></span><span class="added"></span>for <span class="deleted">copypaste. </span><span class="added"></span><span class="deleted"> </span><span class="added"></span>
-                </pre>
-            </div>
-            <div class="text-column">
-                <h3>Text 2</h3>
-                <pre class="textBlock">
-    We need to make a better text editing experience for Moodle. Something that is similar to Google docs but creates a more limited set of options and a better autosave notification for students. <span class="deleted"></span>
-    It would be <span class="deleted"></span><span class="added">awesome </span>if we could: 
-    cut down on the buttons automatically visible if cursive is invoked 
-    show session length to make sure the student doesn't get booted 
-    show autosave status (similar to Google docs) 
-    provide wordcount and character count 
-    <span class="deleted"></span><span class="added">cut </span>margins to a more friendly paginated view <span class="deleted"></span><span class="deleted"></span>
-    I think that would go a long way to make it <span class="added">"word </span><span class="deleted"></span><span class="added">processor-like" </span>and give students less anxiety about using Moodle. This could be separate from and in addition to the current <span class="deleted"></span><span class="added">tinyMCE </span><span class="added">extension </span>for <span class="deleted"></span><span class="added">copypaste </span><span class="deleted"></span><span class="added">stuff. </span>
-                </pre>
-            </div>
+        <p>Upload JSON file:</p>
+        <input type="file" id="jsonFile" accept=".json">
+        <br>
+
+        <p>Enter Moodle data (the static text as submitted):</p>
+
+        <textarea id="moodle_data" placeholder="Moodle data" rows="20" cols="100"></textarea>
+              
+        <p><span style="background-color: #ffd700">Yellow</span> - Added <br>
+        <s>Strikethrough</s> - Backspace used</p>
+        <br>
+        <button onclick="processData()">Highlight Updates</button>
+    
+        <button onclick="strikeDeleted()">Strike Deleted Text</button>
+    
+        <div id="result">
+            <!-- The API response will be displayed here -->
         </div>
+    
+        <script>
+            function processData() {
+                const moodle_data = document.getElementById('moodle_data').value;
+                const jsonFile = document.getElementById('jsonFile').files[0];
+    
+                if (!jsonFile) {
+                    alert("Please upload a JSON file.");
+                    return;
+                }
+    
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const jsonData = event.target.result;
+                    const formData = new FormData();
+                    formData.append('moodle_data', moodle_data);
+                    formData.append('jsonData', jsonData);
+    
+                    // Send the data to the API (replace with your API endpoint)
+                    fetch('http://54.146.169.4:5500/generate_diff', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.text())
+                    .then(htmlResponse => {
+                        // Display the API response as HTML
+                        document.getElementById('result').innerHTML = htmlResponse;
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                };
+    
+                reader.readAsText(jsonFile);
+            }
+    
+            function strikeDeleted() {
+                const moodle_data = document.getElementById('moodle_data').value;
+                const jsonFile = document.getElementById('jsonFile').files[0];
+    
+                if (!jsonFile) {
+                    alert("Please upload a JSON file.");
+                    return;
+                }
+    
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const jsonData = event.target.result;
+                    const formData = new FormData();
+                    formData.append('moodle_data', moodle_data);
+                    formData.append('jsonData', jsonData);
+    
+                    // Send the data to the API (replace with your API endpoint)
+                    fetch('http://54.146.169.4:5500/strike_deleted', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.text())
+                    .then(htmlResponse => {
+                        // Display the API response as HTML
+                        document.getElementById('result').innerHTML = htmlResponse;
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                };
+    
+                reader.readAsText(jsonFile);
+            }
+        </script>
+    </body>
     </div>
+  </div>
+    </div>
+    
     <div class="w3-third w3-container">
     </div>
   </div>
-
-  <!--div class="w3-row">
-    <div class="w3-twothird w3-container">
-      <h1 class="w3-text-teal">Heading</h1>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum
-        dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-    </div>
-    <div class="w3-third w3-container">
-      <p class="w3-border w3-padding-large w3-padding-32 w3-center">AD</p>
-      <p class="w3-border w3-padding-large w3-padding-64 w3-center">AD</p>
-    </div>
-  </div>
-
-  <!--div class="w3-row w3-padding-64">
-    <div class="w3-twothird w3-container">
-      <h1 class="w3-text-teal">Heading</h1>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum
-        dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-    </div>
-    <div class="w3-third w3-container">
-      <p class="w3-border w3-padding-large w3-padding-32 w3-center">AD</p>
-      <p class="w3-border w3-padding-large w3-padding-64 w3-center">AD</p>
-    </div>
-  </div>
-
-   <!-- Pagination -->
-  <!-- div class="w3-center w3-padding-32">
-    <div class="w3-bar">
-      <a class="w3-button w3-black" href="#">1</a>
-      <a class="w3-button w3-hover-black" href="#">2</a>
-      <a class="w3-button w3-hover-black" href="#">3</a>
-      <a class="w3-button w3-hover-black" href="#">4</a>
-      <a class="w3-button w3-hover-black" href="#">5</a>
-      <a class="w3-button w3-hover-black" href="#">»</a>
-    </div>
-  <!/div>
-
-  <footer id="myFooter">
-    <div class="w3-container w3-theme-l2 w3-padding-32">
-      <h4>Footer</h4>
-    </div>
-
-    <div class="w3-container w3-theme-l1">
-      <p>Made with <a href="https://www.w3schools.com/spaces" target="_blank">W3Schools Spaces</a></p>
-    </div>
-  </footer>
-
-<!-- END MAIN -->
-
 
 <script>
 // Get the Sidebar
